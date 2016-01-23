@@ -1,0 +1,58 @@
+package Main;
+
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
+import Classifiers.CMLkNN;
+import Classifiers.MLkNN;
+import DataSource.DataSource;
+import mulan.data.MultiLabelInstances;
+import mulan.evaluation.Evaluator;
+import mulan.evaluation.MultipleEvaluation;
+
+public class MulanExp1 implements DataSource {
+	private static String ARFF = ".arff";
+	private static String XML = ".xml";
+
+	public static void main(String[] args) throws Exception {
+
+		// String arffFilename = Utils.getOption("arff", args); // e.g. -arff
+		// // emotions.arff
+		// String xmlFilename = Utils.getOption("xml", args); // e.g. -xml
+		// emotions.xml
+		String filePathArff = "src/emotions" + ARFF;
+		String filePathXml = "src/emotions" + XML;
+
+		MultiLabelInstances dataset = new MultiLabelInstances(filePathArff,
+				filePathXml);
+
+		CMLkNN learner1 = new CMLkNN(9, 1);
+		Evaluator eval = new Evaluator();
+		MultipleEvaluation results;
+
+		int numFolds = 10;
+
+		// results = eval.crossValidate(learner1, dataset, numFolds);
+		// System.out.println(results);
+		// saveOutPut("RAKEL", results.toString());
+		results = eval.crossValidate(learner1, dataset, numFolds);
+		// System.out.println(results);
+		saveOutPut("CMLkNN", results.toString());
+	}
+
+	private static void saveOutPut(String learningMethod, String results) {
+		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss")
+				.format(Calendar.getInstance().getTime());
+		try {
+			PrintStream out = new PrintStream(new FileOutputStream(
+					learningMethod + "_" + timeStamp + "_output.txt"));
+			out.println(results);
+			out.close();
+		} catch (IOException exception) {
+			System.out.println("Error during file reading/writing");
+		}
+	}
+}
