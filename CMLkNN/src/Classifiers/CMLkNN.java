@@ -62,13 +62,11 @@ public class CMLkNN extends MultiLabelKNN {
 		RF = new Double[numLabels + 1]; // RF denotes occurance
 		freq = new Double[numLabels + 1][numLabels + 1]; // co-occurance
 		temp_Ci = new int[numLabels + 1];
-		numoflabelsofins = new double[train.getNumInstances()];// 每個instance
+		numoflabelsofins = new double[train.getNumInstances()];// every instance
 		// System.out.println(temp_Ci);
 		computeRF(temp_Ci);
 		Newcls();
 		ComputePrior();
-		countnumoflabelsofins();
-		// makePredictionInternal(null);
 
 		if (getDebug()) {
 			System.out.println("Computed Prior Probabilities");
@@ -100,43 +98,11 @@ public class CMLkNN extends MultiLabelKNN {
 							temp_Ci++;
 						}
 					}
-					// double value = Double.parseDouble(
-					// train.attribute(labelIndices[i]).value((int)
-					// train.instance(j).value(labelIndices[i])));
-					// if (Utils.eq(value, 1.0)) {
-					// temp_Ci++;
-					// }
-					// System.out.println(newclsArray[j][i]);
-
 				}
 			}
-			// temp_Ci=9*temp_Ci;
 			PriorProbabilities[i] = (smooth + temp_Ci) / (smooth * 2 + train.numInstances() * numLabels);
 			PriorNProbabilities[i] = 1 - PriorProbabilities[i];
 		}
-	}
-
-	private void countnumoflabelsofins() throws Exception {
-		// for (int j = 0; j < train.numInstances(); j++) {
-		// // System.out.println(numLabels);
-		// Instances knn = new
-		// Instances(lnn.kNearestNeighbours(train.instance(j), numOfNeighbors));
-		// for (int i = 0; i < numLabels; i++) {
-		//
-		// double value = Double.parseDouble(
-		// train.attribute(labelIndices[i]).value((int)
-		// train.instance(j).value(labelIndices[i])));
-		// if (value == 1) {
-		// numoflabelsofins[j]++;
-		// }
-		// }
-		// // System.out.println(numLabels);
-		// }
-		// for (int i = 0; i < numLabels; i++) {
-		// PriorProbabilities[i] = ((smooth + clsSum[i])) / (smooth * 2 +
-		// train.numInstances());
-		// PriorNProbabilities[i] = 1 - PriorProbabilities[i];
-		// }
 	}
 
 	private void computeRF(int[] temp_Ci) {
@@ -149,17 +115,11 @@ public class CMLkNN extends MultiLabelKNN {
 					temp_Ci[i]++;
 				}
 			}
-			// System.out.println(temp_Ci[i]);
-			// RF[i] = ((double) temp_Ci[i] / (double) train.numInstances());
 		}
 	}
 
 	private void Newcls() throws Exception {
 		Double[][] neighborCls = new Double[numLabels][numLabels];
-		// computeFreq(neighborCls);
-		// countnumoflabelsofins();
-		// double[] freqArray = new double[numLabels * numOfNeighbors+1];
-		// double[] freqArrayN = new double[numLabels * numOfNeighbors+1];
 
 		newclsArray = new int[train.numInstances()][numLabels];
 		// double[][] newfreqArrayN = new
@@ -253,16 +213,7 @@ public class CMLkNN extends MultiLabelKNN {
 							aces++;
 						}
 					}
-
-					// double value = Double.parseDouble(
-					// train.attribute(labelIndices[j]).value((int)
-					// knn.instance(k).value(labelIndices[j])));
 				}
-				// if (aces > 9) {
-				// System.out.println(aces);
-				// } // raise the counter of temp_Ci[j][aces] and
-				// temp_NCi[j][aces]
-				// by 1
 				// label j與該instance i的關係
 				if (newclsArray[j][i] == 1) {
 					temp_Ci[i][aces]++;
@@ -288,7 +239,6 @@ public class CMLkNN extends MultiLabelKNN {
 						/ (smooth * (numLabels * numOfNeighbors + 1) + temp2);
 			}
 		}
-		//////////////////////////////////////////
 	}
 
 	protected MultiLabelOutput makePredictionInternal(Instance instance) throws Exception {
@@ -308,19 +258,6 @@ public class CMLkNN extends MultiLabelKNN {
 			// compute sum of aces in KNN
 			int aces = 0; // num of aces in Knn for i
 			for (int k = 0; k < numOfNeighbors; k++) {
-				// if ((yell + k) < train.numInstances()) {
-				// double value = newclsArray[yell+k][i];
-				// if (value == 1) {
-				// aces++;
-				// }
-				// else if ((yell + k) >= train.numInstances()) {
-				// value = newclsArray[yell-k][i];
-				// if (value == 1) {
-				// aces++;
-				// }
-				// }
-				// }
-
 				double value = Double.parseDouble(
 						train.attribute(labelIndices[i]).value((int) knn.instance(k).value(labelIndices[i])));
 				if (Utils.eq(value, 1.0)) {
